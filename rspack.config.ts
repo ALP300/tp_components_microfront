@@ -24,13 +24,17 @@ export default defineConfig({
   },
   output: {
     uniqueName: "app1", // Identificador único para este microfrontend
-    publicPath: "http://localhost:4001/", // Ruta pública para los archivos generados
+    publicPath: "http://react-site-components.s3-website-sa-east-1.amazonaws.com/", // Ruta pública para los archivos generados
   },
   experiments: {
     css: true, // Habilita el soporte para CSS
   },
   module: {
     rules: [
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/i,
+        type: "asset/resource",
+      },
       {
         test: /\.svg$/, // Maneja archivos SVG
         type: "asset",
@@ -68,28 +72,28 @@ export default defineConfig({
   },
   plugins: [
     new rspack.HtmlRspackPlugin({
-      template: "./index.html", // Usa este archivo como plantilla HTML
+      template: "./index.html", 
     }),
     new ModuleFederationPlugin({
-      name: "app1", // Nombre único de este microfrontend
-      filename: "remoteEntry.js", // Nombre del archivo remoto
+      name: "app1", 
+      filename: "remoteEntry.js", 
       exposes: {
-        "./Header": "./src/components/Header.tsx", // Expone el componente Header
-        "./Footer": "./src/components/Footer.tsx", // Expone el componente Footer
-        "./Home": "./src/components/HomeContent.tsx", // Expone el componente Home
+        "./Header": "./src/components/Header.tsx",
+        "./Footer": "./src/components/Footer.tsx",
+        "./Home": "./src/components/HomeContent.tsx", 
       },
       shared: {
-        react: { singleton: true, requiredVersion: "^19.0.0" }, // Comparte React como un singleton
-        "react-dom": { singleton: true, requiredVersion: "^19.0.0" }, // Comparte React DOM como un singleton
+        react: { singleton: true, requiredVersion: "^19.0.0" }, 
+        "react-dom": { singleton: true, requiredVersion: "^19.0.0" },
       },
     }),
-    isDev ? new RefreshPlugin() : null, // Habilita React Refresh en desarrollo
-  ].filter(Boolean), // Filtra plugins nulos
+    isDev ? new RefreshPlugin() : null, 
+  ].filter(Boolean), 
   optimization: {
     minimizer: [
-      new rspack.SwcJsMinimizerRspackPlugin(), // Minimiza JavaScript con SWC
+      new rspack.SwcJsMinimizerRspackPlugin(), 
       new rspack.LightningCssMinimizerRspackPlugin({
-        minimizerOptions: { targets }, // Minimiza CSS con Lightning CSS
+        minimizerOptions: { targets }, 
       }),
     ],
   },
